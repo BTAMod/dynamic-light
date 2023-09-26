@@ -5,8 +5,6 @@ import java.lang.RuntimeException;
 public class LightCache
 {
     final static int cacheSize = 0x8000;
-    final static int cacheSizeThird = cacheSize/3;
-    final static int cacheSizeTwoThird = (cacheSize*2)/3;
 	
     public LightCache()
     {

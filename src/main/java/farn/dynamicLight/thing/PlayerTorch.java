@@ -8,6 +8,24 @@ import farn.dynamicLight.Main;
 
 public class PlayerTorch
 {
+	boolean bIsTorchActive = false;
+	float posX;
+	float posY;
+	float posZ;
+	int iX;
+	int iY;
+	int iZ;
+	private int torchBrightness = 15;
+	private int range = torchBrightness * 2 + 1;
+	float[] cache = new float[range * range * range];
+	private Entity torchentity;
+	public int currentItemID = 0;
+	private boolean worksUnderwater = true;
+	public int deathAge = -1;
+
+	private boolean IsCustomTorch = false;
+
+	public boolean IsArmorTorch = false;
     public PlayerTorch(Entity entity)
     {
 		torchentity = entity;
@@ -160,37 +178,8 @@ public class PlayerTorch
 		return (deathAge == 0);
 	}
 	
-	public void FlagTorchAsCustom()
-	{
-		IsCustomTorch = true;
-	}
-	
-	public void UnFlagTorchAsCustom()
-	{
-		IsCustomTorch = false;
-	}
-	
 	public boolean IsTorchCustom()
 	{
 		return IsCustomTorch;
 	}
-
-    boolean bIsTorchActive = false;
-    float posX;
-    float posY;
-    float posZ;
-    int iX;
-    int iY;
-    int iZ;
-    private int torchBrightness = 15;
-    private int range = torchBrightness * 2 + 1;
-    float[] cache = new float[range * range * range];
-    private Entity torchentity;
-	public int currentItemID = 0;
-	private boolean worksUnderwater = true;
-	public int deathAge = -1;
-	
-	private boolean IsCustomTorch = false;
-	
-	public boolean IsArmorTorch = false;
 }

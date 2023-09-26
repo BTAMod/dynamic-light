@@ -1,11 +1,7 @@
 package farn.dynamicLight;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.RenderGlobal;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import farn.dynamicLight.thing.*;
-import net.minecraft.core.util.helper.MathHelper;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.ItemStack;
@@ -14,32 +10,26 @@ import net.minecraft.core.entity.EntityItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.lwjgl.input.Keyboard;
-
 import java.util.*;
 
 
 public class Main implements ModInitializer {
     public static final String MOD_ID = "dynamic_light";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
     private static int nextFrameTime;
     private static long prevFrameTimeForAvg;
     private static long[] tFrameTimes = new long[60];
-
     public static final Main instance = new Main();
+    private List entityList;
+
+    private int entityListHash = 0;
+    long time;
 
     @Override
     public void onInitialize() {
         LOGGER.info("Dynamic Light Mod initialized.");
         time = System.currentTimeMillis();
     }
-
-    private final String togglekey = "L";
-    private final int itogglekey = Keyboard.getKeyIndex(togglekey);
-    private int lastEntityListHash = 0;
-    private List entityList;
-    long time;
     public boolean OnTickInGame(net.minecraft.client.Minecraft mc)
     {
         if (mc.thePlayer == null || mc.theWorld == null) return false;
@@ -51,11 +41,12 @@ public class Main implements ModInitializer {
             time = System.currentTimeMillis();
         }
 
-        if(lastEntityListHash != mc.theWorld.loadedEntityList.hashCode())
+        
+
+        if(entityListHash != mc.theWorld.loadedEntityList.hashCode())
         {
             entityList = mc.theWorld.loadedEntityList;
-            lastEntityListHash = mc.theWorld.loadedEntityList.hashCode();
-
+            entityListHash = entityList.hashCode();
             UpdateTorchEntities(mc.theWorld);
         }
 
@@ -66,20 +57,8 @@ public class Main implements ModInitializer {
             UpdateBurningEntities(mc);
         }
 
-        if (Keyboard.getEventKeyState()
-                && Keyboard.getEventKey() == itogglekey
-                && newsecond)
-        {
-            PlayerTorchArray.ToggleDynamicLights();
-        }
-
         return true;
     }
-
-    private int targetBlockID = 0;
-    private int targetBlockX;
-    private int targetBlockY;
-    private int targetBlockZ;
 
     private void TorchEntitiesDoTick(net.minecraft.client.Minecraft mc, boolean newsecond)
     {
@@ -304,25 +283,6 @@ public class Main implements ModInitializer {
             }
         }
     }
-
-    private boolean hasTargetBlockChanged(EntityPlayer p)
-    {
-        double x = -MathHelper.sin((p.yRot / 180F) * 3.141593F) * MathHelper.cos((p.xRot / 180F) * 3.141593F);
-        double z = MathHelper.cos((p.yRot / 180F) * 3.141593F) * MathHelper.cos((p.xRot / 180F) * 3.141593F);
-        int targetX = MathHelper.floor_double(p.x + x);
-        int targetY = MathHelper.floor_double(p.y) - 1;
-        int targetZ = MathHelper.floor_double(p.z + z);
-        int blockID = p.world.getBlockId(targetX, targetY, targetZ);
-
-        if (blockID != targetBlockID)
-        {
-            targetBlockID = blockID;
-            return true;
-        }
-
-        return false;
-    }
-
     public static void onABBBUninit() {
         prevFrameTimeForAvg = System.nanoTime();
         tFrameTimes[nextFrameTime] = prevFrameTimeForAvg;

@@ -2,15 +2,10 @@ package farn.dynamicLight.mixin;
 
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.chunk.ChunkCache;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.block.Block;
 import org.spongepowered.asm.mixin.Shadow;
 import farn.dynamicLight.thing.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ChunkCache.class, remap = false)
 public class ChunkCacheMixin {

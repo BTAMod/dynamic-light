@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "dynamic_light",
-  "version": "1.0.0",
+  "version": "1.1.0",
 
   "name": "Dynamic Light Mod",
-  "description": "This mod aims to help new BTA modders.",
+  "description": "This mod make few item such as Torch and Lava Bucket lighten around you when you holding it or drop it on the ground.",
   "authors": [
     "farnfarn02",
     "AtomicStryker (Original Mod)"

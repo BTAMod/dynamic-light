@@ -1,8 +1,6 @@
 package farn.dynamicLight.mixin;
 
 import net.minecraft.core.world.World;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.block.Block;
 import farn.dynamicLight.thing.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

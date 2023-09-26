@@ -28,11 +28,6 @@ public final class BlockCoord
         numBlockCoordsInUse = 0;
     }
     
-    public static void releaseLastOne()
-    {
-        numBlockCoordsInUse--;
-    }
-    
     public BlockCoord set(int i, int j, int k)
     {
         x = i;
