@@ -17,40 +17,28 @@ public class LightCache
         for(int i=0; i<cacheSize; ++i)
             coords[i] = null;
     }
-    
-    private int calcHash(int x, int y, int z)
-    {
-        int m = 0x5bd1e995;
-        int r = 24;
+
+    private int calcHash(int x, int y, int z) {
+        final int m = 0x5bd1e995;
+        final int r = 24;
 
         int h = 1234567890;
-        int k;
-        
-        k = x;
-        k *= m;
-        k ^= k >>> r;
-        k *= m;
-        h *= m;
-        h ^= k;
-        
-        k = y;
-        k *= m;
-        k ^= k >>> r;
-        k *= m;
-        h *= m;
-        h ^= k;
-        
-        k = z;
-        k *= m;
-        k ^= k >>> r;
-        k *= m;
-        h *= m;
-        h ^= k;
-        
+
+        h ^= mixHash(x, m, r);
+        h ^= mixHash(y, m, r);
+        h ^= mixHash(z, m, r);
+
         h ^= h >>> 13;
         h *= m;
         h ^= h >>> 15;
-        
+
+        return h;
+    }
+
+    private int mixHash(int k, int m, int r) {
+        int h = k * m;
+        h ^= h >>> r;
+        h *= m;
         return h;
     }
     

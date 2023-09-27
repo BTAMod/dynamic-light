@@ -2,14 +2,19 @@ package farn.dynamicLight;
 
 import net.fabricmc.api.ModInitializer;
 import farn.dynamicLight.thing.*;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.entity.Entity;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
 import net.minecraft.core.entity.EntityItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.*;
 
 
@@ -20,47 +25,33 @@ public class Main implements ModInitializer {
     private static long prevFrameTimeForAvg;
     private static long[] tFrameTimes = new long[60];
     public static final Main instance = new Main();
-    private List entityList;
-
-    private int entityListHash = 0;
     long time;
+    static boolean areSettingsLoaded;
+    static File settingsFile;
 
     @Override
     public void onInitialize() {
         LOGGER.info("Dynamic Light Mod initialized.");
         time = System.currentTimeMillis();
+        if (!areSettingsLoaded)
+            initializeSettingsFile();
     }
-    public boolean OnTickInGame(net.minecraft.client.Minecraft mc)
+    public void OnTickInGame(net.minecraft.client.Minecraft mc)
     {
-        if (mc.thePlayer == null || mc.theWorld == null) return false;
+        
 
-        boolean newsecond = false;
-        if(System.currentTimeMillis() >= time + 1000L)
+
+        if (System.currentTimeMillis() >= time + 250L)
         {
-            newsecond = true;
+            UpdateTorchEntities(mc.theWorld);
+            TorchEntitiesDoTick(mc);
+            UpdateBurningEntities(mc);
             time = System.currentTimeMillis();
         }
 
-        
-
-        if(entityListHash != mc.theWorld.loadedEntityList.hashCode())
-        {
-            entityList = mc.theWorld.loadedEntityList;
-            entityListHash = entityList.hashCode();
-            UpdateTorchEntities(mc.theWorld);
-        }
-
-        TorchEntitiesDoTick(mc, newsecond);
-
-        if (newsecond)
-        {
-            UpdateBurningEntities(mc);
-        }
-
-        return true;
     }
 
-    private void TorchEntitiesDoTick(net.minecraft.client.Minecraft mc, boolean newsecond)
+    private void TorchEntitiesDoTick(net.minecraft.client.Minecraft mc)
     {
         for(int j = 0; j < PlayerTorchArray.torchArray.size(); j++) // loop the PlayerTorch List
         {
@@ -70,12 +61,12 @@ public class Main implements ModInitializer {
             if(torchent instanceof EntityPlayer)
             {
                 EntityPlayer entPlayer = (EntityPlayer)torchent;
-                TickPlayerEntity(mc, newsecond, torchLoopClass, entPlayer);
+                TickPlayerEntity(mc, torchLoopClass, entPlayer);
             }
 
             else if(torchent instanceof EntityItem)
             {
-                TickItemEntity(mc, newsecond, torchLoopClass, torchent);
+                TickItemEntity(mc, torchLoopClass, torchent);
             }
 
             else
@@ -85,24 +76,21 @@ public class Main implements ModInitializer {
         }
     }
 
-    private void TickPlayerEntity(net.minecraft.client.Minecraft mc, boolean newsecond, PlayerTorch torchLoopClass, EntityPlayer entPlayer)
+    private void TickPlayerEntity(net.minecraft.client.Minecraft mc, PlayerTorch torchLoopClass, EntityPlayer entPlayer)
     {
         int oldbrightness = torchLoopClass.isTorchActive() ? torchLoopClass.GetTorchBrightness() : 0;
 
-        if (newsecond)
-        {
             if (GetPlayerArmorLightValue(torchLoopClass, entPlayer, oldbrightness) == 0 && !entPlayer.isOnFire()) // case no (more) shiny armor
             {
                 torchLoopClass.IsArmorTorch = false;
             }
-        }
 
         int itembrightness = 0;
         if (entPlayer.inventory.mainInventory[entPlayer.inventory.currentItem] != null)
         {
             int ID = entPlayer.inventory.mainInventory[entPlayer.inventory.currentItem].itemID;
             if (ID != torchLoopClass.currentItemID
-                    || (newsecond && !torchLoopClass.IsArmorTorch))
+                    || (!torchLoopClass.IsArmorTorch))
             {
                 torchLoopClass.currentItemID = ID;
 
@@ -180,7 +168,7 @@ public class Main implements ModInitializer {
         return armorbrightness;
     }
 
-    private void TickItemEntity(net.minecraft.client.Minecraft mc, boolean newsecond, PlayerTorch torchLoopClass, Entity torchent)
+    private void TickItemEntity(net.minecraft.client.Minecraft mc, PlayerTorch torchLoopClass, Entity torchent)
     {
         torchLoopClass.setTorchPos(mc.theWorld, (float)torchent.x, (float)torchent.y, (float)torchent.z);
 
@@ -191,7 +179,7 @@ public class Main implements ModInitializer {
                 torchent.remove();
                 PlayerTorchArray.RemoveTorchFromArray(mc.theWorld, torchLoopClass);
             }
-            else if (newsecond)
+            else
             {
                 torchLoopClass.doAgeTick();
             }
@@ -200,9 +188,9 @@ public class Main implements ModInitializer {
 
     private void UpdateBurningEntities(net.minecraft.client.Minecraft mc)
     {
-        for(int k = 0; k < entityList.size(); k++) // we loop ALL entities
+        for(int k = 0; k < mc.theWorld.loadedEntityList.size(); k++) // we loop ALL entities
         {
-            Entity tempent = (Entity)entityList.get(k);
+            Entity tempent = (Entity)mc.theWorld.loadedEntityList.get(k);
 
             if (tempent.isOnFire())
             {
@@ -228,9 +216,9 @@ public class Main implements ModInitializer {
     {
         List tempList = new ArrayList();
 
-        for(int k = 0; k < entityList.size(); k++)
+        for(int k = 0; k < worldObj.loadedEntityList.size(); k++)
         {
-            Entity tempent = (Entity)entityList.get(k);
+            Entity tempent = (Entity)worldObj.loadedEntityList.get(k);
 
             if(tempent instanceof EntityPlayer)
             {
@@ -283,7 +271,7 @@ public class Main implements ModInitializer {
             }
         }
     }
-    public static void onABBBUninit() {
+    public static void onPoolUnInitialize() {
         prevFrameTimeForAvg = System.nanoTime();
         tFrameTimes[nextFrameTime] = prevFrameTimeForAvg;
         nextFrameTime = ((nextFrameTime + 1) % 60);
@@ -296,6 +284,93 @@ public class Main implements ModInitializer {
             return (prevFrameTimeForAvg - tFrameTimes[nextFrameTime]) / 60L;
         }
         return 23333333L;
+    }
+
+    public static void initializeSettingsFile()
+    {
+        settingsFile = new File(FabricLoader.getInstance().getConfigDir() + "dynamicLight_itemWhiteList.setting");
+
+        try
+        {
+            if(!settingsFile.exists()) {
+                BufferedWriter configWriter = new BufferedWriter(new FileWriter(settingsFile));
+                configWriter.write("#Format (note: ItemLightTimeLimit and WorksUnderwater are optional)" + newLine());
+                configWriter.write("#ItemID:MaximumBrightness:LightRange:ItemLightTimeLimit:WorksUnderwater(0 is false)" + newLine());
+                configWriter.write("#" + newLine());
+                configWriter.write("#" + newLine());
+                configWriter.write("#Torch" + newLine());
+                configWriter.write(Block.torchCoal.id + ":15:31:-1:0" + newLine());
+                configWriter.write("#Glowstone dust" + newLine());
+                configWriter.write(Item.dustGlowstone.id + ":10:21" + newLine());
+                configWriter.write("#Glowstone dust" + newLine());
+                configWriter.write(Block.glowstone.id + ":12:25" + newLine());
+                configWriter.write("#Jack o Lantern" + newLine());
+                configWriter.write(Block.pumpkinCarvedActive.id + ":15:31" + newLine());
+                configWriter.write("#Bucket of Lava" + newLine());
+                configWriter.write(Item.bucketLava.id + ":15:31" + newLine());
+                configWriter.write("#Redstone Torch" + newLine());
+                configWriter.write(Block.torchRedstoneActive.id + ":10:21" + newLine());
+                configWriter.write("#Redstone Ore (Stone)" + newLine());
+                configWriter.write(Block.oreRedstoneGlowingStone.id + ":10:21" + newLine());
+                configWriter.write("#Redstone Ore (Basalt)" + newLine());
+                configWriter.write(Block.oreRedstoneGlowingBasalt.id + ":10:21" + newLine());
+                configWriter.write("#Redstone Ore (Granite)" + newLine());
+                configWriter.write(Block.oreRedstoneGlowingGranite.id + ":10:21" + newLine());
+                configWriter.write("#Redstone Ore (Lime Stone)" + newLine());
+                configWriter.write(Block.oreRedstoneLimestone.id + ":10:21" + newLine());
+                configWriter.write("#Nether coal" + newLine());
+                configWriter.write(Item.nethercoal.id + ":10:21" + newLine());
+                configWriter.write("#Green lantern jar" + newLine());
+                configWriter.write(Item.lanternFireflyGreen.id + ":11:23" + newLine());
+                configWriter.write("#Blue lantern jar" + newLine());
+                configWriter.write(Item.lanternFireflyBlue.id + ":11:23" + newLine());
+                configWriter.write("#Orange lantern jar" + newLine());
+                configWriter.write(Item.lanternFireflyOrange.id + ":11:23" + newLine());
+                configWriter.write("#Red lantern jar" + newLine());
+                configWriter.write(Item.lanternFireflyRed.id + ":11:23" + newLine());
+                configWriter.close();
+            }
+            BufferedReader in = new BufferedReader(new FileReader(settingsFile));
+            String sCurrentLine;
+            int i = 0;
+
+            while((sCurrentLine = in.readLine()) != null)
+            {
+                if(sCurrentLine.startsWith("#")) continue;
+
+                String[] curLine = sCurrentLine.split(":");
+
+                PlayerTorchArray.lightdata[i][0] = Integer.parseInt(curLine[0]); // Item ID
+                PlayerTorchArray.lightdata[i][1] = Integer.parseInt(curLine[1]); // Max Brightness
+                PlayerTorchArray.lightdata[i][2] = Integer.parseInt(curLine[2]); // Range
+                PlayerTorchArray.lightdata[i][3] = -1;
+                PlayerTorchArray.lightdata[i][4] = 1;
+
+                if (curLine.length > 3)
+                    PlayerTorchArray.lightdata[i][3] = Integer.parseInt(curLine[3]); // Death Age
+
+                if (curLine.length > 4)
+                    PlayerTorchArray.lightdata[i][4] = Integer.parseInt(curLine[4]); // Work UnderWater
+
+
+                ++i;
+            }
+            PlayerTorchArray.lightdata[i][0] = 0; // Just to make sure we have an ending marked
+
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        areSettingsLoaded = true;
+    }
+
+    public static String newLine() {
+        return System.getProperty("line.separator");
+    }
+
+    public static final EntityPlayer getPlayer() {
+        return Minecraft.getMinecraft(Minecraft.class).thePlayer;
     }
 
 }

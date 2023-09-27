@@ -25,7 +25,7 @@ public class AABBMixin {
     public static void deinitializePool() {
         boundingBoxes.clear();
         numBoundingBoxesInUse = 0;
-        Main.onABBBUninit();
+        Main.onPoolUnInitialize();
     }
 
 }

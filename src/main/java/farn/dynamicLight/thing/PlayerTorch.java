@@ -1,5 +1,6 @@
 package farn.dynamicLight.thing;
 
+import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.world.World;
 import net.minecraft.core.block.Block;
@@ -91,7 +92,7 @@ public class PlayerTorch
 	
 	private boolean IsPutOutByWater()
 	{
-		return (!worksUnderwater && torchentity.isInWater());
+		return (!worksUnderwater && Main.getPlayer().isUnderLiquid(Material.water));
 	}
 
     private void markBlocksDirty(World world)
@@ -102,12 +103,12 @@ public class PlayerTorch
         int index = 0;
         for(int i = -torchBrightness; i <= torchBrightness; i++)
         {
-            int blockX = i + iX;
             for(int j = -torchBrightness; j <= torchBrightness; j++)
             {
-                int blockY = j + iY;
                 for(int k = -torchBrightness; k <= torchBrightness; k++)
                 {
+					int blockX = i + iX;
+					int blockY = j + iY;
                     int blockZ = k + iZ;
                     int blockID = world.getBlockId(blockX, blockY, blockZ);
                     if(blockID != 0 && Block.blocksList[blockID].renderAsNormalBlock())

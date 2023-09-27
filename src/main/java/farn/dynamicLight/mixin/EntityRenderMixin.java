@@ -17,7 +17,9 @@ public class EntityRenderMixin {
 	
 	@Inject(method = "updateCameraAndRender", at = @At("TAIL"))
 	public void onRender(float partialTicks, CallbackInfo ci) {
-		Main.instance.OnTickInGame(mc);
+		if(mc.theWorld != null) {
+			Main.instance.OnTickInGame(mc);
+		}
 	}
 
 }
