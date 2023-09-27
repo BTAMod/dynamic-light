@@ -137,7 +137,8 @@ public class PlayerTorchArray
 	
 	public static void initializeSettingsFile()
 	{
-		settingsFile = new File(FabricLoader.getInstance().getConfigDir() + "config/dynamicLight/dynamicLight_itemWhiteList.settings");
+		File folder = new File(FabricLoader.getInstance().getConfigDir() + "/dynamicLight/");
+		settingsFile = new File(folder + "dynamicLight_itemWhiteList.settings");
 		
 		try
 		{
