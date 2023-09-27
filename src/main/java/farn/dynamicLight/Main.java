@@ -369,8 +369,4 @@ public class Main implements ModInitializer {
         return System.getProperty("line.separator");
     }
 
-    public static final EntityPlayer getPlayer() {
-        return Minecraft.getMinecraft(Minecraft.class).thePlayer;
-    }
-
 }

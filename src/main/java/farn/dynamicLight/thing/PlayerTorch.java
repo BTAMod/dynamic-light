@@ -92,7 +92,7 @@ public class PlayerTorch
 	
 	private boolean IsPutOutByWater()
 	{
-		return (!worksUnderwater && Main.getPlayer().isUnderLiquid(Material.water));
+		return (!worksUnderwater && torchentity.isUnderLiquid(Material.water));
 	}
 
     private void markBlocksDirty(World world)

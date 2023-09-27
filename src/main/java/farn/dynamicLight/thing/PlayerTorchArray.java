@@ -1,6 +1,7 @@
 package farn.dynamicLight.thing;
 
 import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.world.World;
 import java.util.*;
 
