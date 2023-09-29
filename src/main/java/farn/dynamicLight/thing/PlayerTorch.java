@@ -48,22 +48,6 @@ public class PlayerTorch
 
     public void setTorchPos(World world, float x, float y, float z)
     {
-		long avgTime = Main.getAvgFrameTime();
-
-		int updateRate = 1;
-		if (avgTime > 33333333L)
-		{
-			updateRate = 3;
-		}
-		else if (avgTime > 16666666L)
-		{
-			updateRate = 2;
-		}
-		
-		if ((world.getWorldTime() % updateRate == 0L)
-		&& ((posX != x) || (posY != y) || (posZ != z))
-		&& !IsPutOutByWater())
-		{
             posX = x;
             posY = y;
             posZ = z;
@@ -71,7 +55,6 @@ public class PlayerTorch
             iY = (int)posY;
             iZ = (int)posZ;
 			markBlocksDirty(world);
-        }
     }
 
 	public float getTorchLight(World world, int x, int y, int z)

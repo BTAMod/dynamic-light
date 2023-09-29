@@ -8,7 +8,6 @@
         "ChunkCacheMixin",
         "WorldMixin",
         "EntityRenderMixin",
-        "AABBMixin"
     ],
     "injectors": {
         "defaultRequire": 1

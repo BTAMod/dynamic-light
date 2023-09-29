@@ -5,6 +5,8 @@ import farn.dynamicLight.thing.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockTNT;
+import net.minecraft.core.entity.EntityTNT;
 import net.minecraft.core.entity.player.EntityPlayer;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.Item;
@@ -21,9 +23,6 @@ import java.util.*;
 public class Main implements ModInitializer {
     public static final String MOD_ID = "dynamic_light";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    private static int nextFrameTime;
-    private static long prevFrameTimeForAvg;
-    private static long[] tFrameTimes = new long[60];
     public static final Main instance = new Main();
     long time;
     static boolean areSettingsLoaded;
@@ -41,7 +40,7 @@ public class Main implements ModInitializer {
         
 
 
-        if (System.currentTimeMillis() >= time + 250L)
+        if (System.currentTimeMillis() >= time + 50L)
         {
             UpdateTorchEntities(mc.theWorld);
             TorchEntitiesDoTick(mc);
@@ -271,20 +270,6 @@ public class Main implements ModInitializer {
             }
         }
     }
-    public static void onPoolUnInitialize() {
-        prevFrameTimeForAvg = System.nanoTime();
-        tFrameTimes[nextFrameTime] = prevFrameTimeForAvg;
-        nextFrameTime = ((nextFrameTime + 1) % 60);
-    }
-
-    public static long getAvgFrameTime()
-    {
-        if (tFrameTimes[nextFrameTime] != 0L)
-        {
-            return (prevFrameTimeForAvg - tFrameTimes[nextFrameTime]) / 60L;
-        }
-        return 23333333L;
-    }
 
     public static void initializeSettingsFile()
     {
@@ -320,6 +305,10 @@ public class Main implements ModInitializer {
                 configWriter.write(Block.oreRedstoneLimestone.id + ":10:21" + newLine());
                 configWriter.write("#Nether coal" + newLine());
                 configWriter.write(Item.nethercoal.id + ":10:21" + newLine());
+                configWriter.write("#Nether coal ore" + newLine());
+                configWriter.write(Block.oreNethercoalNetherrack.id + ":12:25" + newLine());
+                configWriter.write("#Igneous netherRack" + newLine());
+                configWriter.write(Block.netherrackIgneous.id + ":12:25" + newLine());
                 configWriter.write("#Green lantern jar" + newLine());
                 configWriter.write(Item.lanternFireflyGreen.id + ":11:23" + newLine());
                 configWriter.write("#Blue lantern jar" + newLine());
@@ -363,6 +352,10 @@ public class Main implements ModInitializer {
         }
 
         areSettingsLoaded = true;
+    }
+
+    public boolean isExplodableEntity(Entity ent) {
+        return ent instanceof EntityTNT;
     }
 
     public static String newLine() {
