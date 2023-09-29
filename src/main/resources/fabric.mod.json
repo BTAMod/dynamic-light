@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "dynamic_light",
+  "version": "1.2-pre1",
+
+  "name": "Dynamic Light Mod",
+  "description": "This mod make few item such as Torch and Lava Bucket lighten around you when you holding it or drop it on the ground.",
+  "authors": [
+    "farnfarn02",
+    "AtomicStryker (Original Mod)"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+        "farn.dynamicLight.Main"
+    ]
+  },
+  "mixins": [
+      "dynamicLight.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3"
+  },
+  "suggests": {
+  }
+}
