@@ -1,8 +1,7 @@
 package farn.dynamicLight.mixin;
 
+import farn.dynamicLight.util.PlayerTorchArray;
 import net.minecraft.client.render.ChunkRenderer;
-import farn.dynamicLight.thing.BlockCoord;
-import farn.dynamicLight.thing.LightCache;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,8 +12,7 @@ public class ChunkRendererMixin {
 
     @Inject(method = "updateRenderer", at = @At("TAIL"))
     private void afterUpdateRenderer(CallbackInfo ci) {
-        LightCache.cache.clear();
-        BlockCoord.resetPool();
+        PlayerTorchArray.clearCacheAndResetPool();
     }
 
 }
