@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "dynamic_light",
+  "version": "1.2",
+
+  "name": "Dynamic Light Mod",
+  "icon": "farn/dynamicLight/icon/icon.png",
+  "description": "This mod make few item able to emit light when holding or as dropped item",
+  "authors": [
+    "farnfarn02",
+    "AtomicStryker (Original Mod)"
+  ],
+  "license": "CC0-1.0",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+        "farn.dynamicLight.DynamicLight"
+    ],
+    "modmenu": [
+      "farn.dynamicLight.config.DynamicLightConfig"
+    ]
+  },
+  "mixins": [
+      "dynamicLight.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3"
+  }
+}
