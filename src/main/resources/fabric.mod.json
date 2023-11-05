@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "dynamic_light",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "environment": "client",
   "name": "Dynamic Light Mod",
   "icon": "farn/dynamicLight/icon/icon.png",
