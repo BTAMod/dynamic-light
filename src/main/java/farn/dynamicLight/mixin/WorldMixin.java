@@ -4,12 +4,19 @@ import net.minecraft.core.world.World;
 import farn.dynamicLight.util.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = World.class, remap = false)
 public class WorldMixin {
 
     public World world = (World)(Object)this;
 
+    /**
+     * @author AtomicStryker
+     * @reason farnfarn02
+     */
     /**
      * @author AtomicStryker
      * @reason farnfarn02
@@ -40,9 +47,6 @@ public class WorldMixin {
             }
         }
 
-        if (lightValue < l) {
-            lightValue = l;
-        }
         lc = world.getWorldType().getBrightnessRamp()[lightValue];
         DynamicLightCache.cache.setLightValue(i, j, k, lc);
         return lc;
@@ -56,7 +60,6 @@ public class WorldMixin {
     public float getLightBrightness(int i, int j, int k)
     {
         float lc = DynamicLightCache.cache.getLightValue(i, j, k);
-
         if(lc >= 0)
         {
             return lc;
@@ -82,6 +85,12 @@ public class WorldMixin {
         lc = world.getWorldType().getBrightnessRamp()[lightValue];
         DynamicLightCache.cache.setLightValue(i, j, k, lc);
         return lc;
+    }
+
+
+    @Inject(at = @At(value = "TAIL"), method = "notifyBlockOfNeighborChange")
+    private void injected(int i, int j, int k, int blockID, CallbackInfo ci) {
+        world.markBlockNeedsUpdate(i, j, k);
     }
 
 }
