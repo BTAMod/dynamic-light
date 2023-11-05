@@ -1,24 +1,27 @@
 {
   "schemaVersion": 1,
   "id": "dynamic_light",
-  "version": "1.2",
-
+  "version": "1.2.1",
+  "environment": "client",
   "name": "Dynamic Light Mod",
   "icon": "farn/dynamicLight/icon/icon.png",
-  "description": "This mod make few item able to emit light when holding or as dropped item",
+  "description": "A mod for those who hate the darkness",
   "authors": [
     "farnfarn02",
     "AtomicStryker (Original Mod)"
   ],
   "license": "CC0-1.0",
-
-  "environment": "*",
+  "contact": {
+    "homepage": "https://github.com/FarnGitHub/",
+    "sources": "https://github.com/FarnGitHub/BTA-Dynamic-Light-Mod",
+    "issues": "https://github.com/FarnGitHub/BTA-Dynamic-Light-Mod/issues"
+  },
   "entrypoints": {
-    "main": [
+    "client": [
         "farn.dynamicLight.DynamicLight"
     ],
     "modmenu": [
-      "farn.dynamicLight.config.DynamicLightConfig"
+      "farn.dynamicLight.config.DynamicLightModMenu"
     ]
   },
   "mixins": [

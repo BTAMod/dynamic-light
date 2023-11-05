@@ -1,6 +1,6 @@
 package farn.dynamicLight.util;
 
-import farn.dynamicLight.DynamicLight;
+import farn.dynamicLight.config.DynamicLightConfig;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.world.World;
 import java.util.*;
@@ -63,7 +63,7 @@ public class DynamicLightDispatcher
 		
 		for(int x = 0; x < itemArray.size(); x++)
         {
-			DynamicLightSourceEntity torchLoopClass = (DynamicLightSourceEntity) itemArray.get(x);
+			DynamicLightSource torchLoopClass = (DynamicLightSource) itemArray.get(x);
 			lightBuffer = torchLoopClass.getTorchLight(world, i, j, k);
 			if(lightBuffer > torchLight)
 			{
@@ -75,30 +75,30 @@ public class DynamicLightDispatcher
 	}
 
 	
-	public static void AddEntity(DynamicLightSourceEntity playertorch)
+	public static void AddEntity(DynamicLightSource playertorch)
     {
-		if(!DynamicLight.resetLight) {
+		if(!DynamicLightConfig.resetLight) {
 			itemArray.add(playertorch);
 			entityArray.add(playertorch.GetTorchEntity());
 		}
     }
 	
-	public static void RemoveTorch(World world, DynamicLightSourceEntity playertorch)
+	public static void RemoveTorch(World world, DynamicLightSource playertorch)
 	{
-		if(!DynamicLight.resetLight) {
+		if(!DynamicLightConfig.resetLight) {
 			playertorch.setTorchState(world, false);
 			itemArray.remove(playertorch);
 			entityArray.remove(playertorch.GetTorchEntity());
 		}
 	}
 	
-	public static DynamicLightSourceEntity GetTorchForEntity(Entity ent)
+	public static DynamicLightSource GetTorchForEntity(Entity ent)
 	{
 		if(entityArray.contains(ent))
 		{
 			for(int x = 0; x < itemArray.size(); x++)
 			{
-				DynamicLightSourceEntity torchLoopClass = (DynamicLightSourceEntity) itemArray.get(x);
+				DynamicLightSource torchLoopClass = (DynamicLightSource) itemArray.get(x);
 				if (torchLoopClass.GetTorchEntity() == ent)
 				{
 					return torchLoopClass;
