@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "farn.dynamicLight.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+        "WorldMixin",
+        "ChunkCacheMixin",
+        "EntityCreeperAccessor",
+        "ChunkRendererMixin",
+        "WorldRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+  }
+}
