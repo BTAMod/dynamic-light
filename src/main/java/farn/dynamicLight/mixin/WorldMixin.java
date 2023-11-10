@@ -17,10 +17,6 @@ public class WorldMixin {
      * @author AtomicStryker
      * @reason farnfarn02
      */
-    /**
-     * @author AtomicStryker
-     * @reason farnfarn02
-     */
     @Overwrite
     public float getBrightness(int i, int j, int k, int l)
     {

@@ -44,11 +44,6 @@ public class DynamicLightRenderer {
                 TickPlayerEntity(mc, torchLoopClass, entPlayer);
             }
 
-            else if(torchent instanceof EntityItem)
-            {
-                TickItemEntity(mc, torchLoopClass, torchent);
-            }
-
             else
             {
                 torchLoopClass.setTorchPos(mc.theWorld, (float)torchent.x, (float)torchent.y, (float)torchent.z);
