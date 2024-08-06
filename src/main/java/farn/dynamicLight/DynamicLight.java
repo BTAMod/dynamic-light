@@ -7,11 +7,10 @@ import farn.dynamicLight.config.DynamicLightConfig;
 public class DynamicLight implements ClientModInitializer {
     public static final String MOD_ID = "dynamic_light";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
     @Override
     public void onInitializeClient() {
         LOGGER.info("Dynamic Light Mod initialized.");
-        DynamicLightConfig.initializeSettingsFile(false);
+        DynamicLightConfig.initializeSettingsFile(true);
     }
-
-
 }

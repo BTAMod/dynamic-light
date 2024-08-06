@@ -8,13 +8,14 @@
   "description": "A mod for those who hate the darkness",
   "authors": [
     "farnfarn02",
-    "AtomicStryker (Original Mod)"
+    "AtomicStryker (Original Mod)",
+    "Bigjango (Updating)"
   ],
   "license": "CC0-1.0",
   "contact": {
-    "homepage": "https://github.com/FarnGitHub/",
-    "sources": "https://github.com/FarnGitHub/BTA-Dynamic-Light-Mod",
-    "issues": "https://github.com/FarnGitHub/BTA-Dynamic-Light-Mod/issues"
+    "homepage": "https://github.com/BTAMod/dynamic-light",
+    "sources": "https://github.com/BTAMod/dynamic-light",
+    "issues": "https://github.com/BTAMod/dynamic-light/issues"
   },
   "entrypoints": {
     "client": [

@@ -14,12 +14,11 @@ import net.minecraft.client.Minecraft;
 public class WorldRendererMixin {
 	@Shadow
 	Minecraft mc;
-	
+
 	@Inject(method = "updateCameraAndRender", at = @At("TAIL"))
 	public void onRender(float partialTicks, CallbackInfo ci) {
 		if(mc.theWorld != null && !DynamicLightConfig.resetLight) {
 			DynamicLightRenderer.instance.OnTickInGame(mc);
 		}
 	}
-
 }

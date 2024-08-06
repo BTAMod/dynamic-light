@@ -17,7 +17,7 @@ public class DynamicLightConfig {
     public static void initializeSettingsFile(boolean doResetLight)
     {
         if(!init) {
-            settingsFile = new File(FabricLoader.getInstance().getConfigDir() + "dynamicLight_itemWhiteList.setting");
+            settingsFile = new File(FabricLoader.getInstance().getConfigDir() + "/dynamicLight_items.config");
             init = true;
         }
 

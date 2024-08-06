@@ -53,7 +53,8 @@ public class DynamicLightCache
             i = (i+1)%cacheSize;
             if(j++>cacheSize)
             {
-                throw new RuntimeException("Light cache full");
+                clear();
+                return 0;
             }
         }
         
